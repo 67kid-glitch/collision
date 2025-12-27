@@ -6,17 +6,12 @@ class MobSystem {
   }
 
   setDimension(name) {
-    // Remove existing mobs
     this.mobs.forEach(m => m.destroy());
     this.mobs = [];
     this.currentDimension = name;
 
     MOB_DATA.forEach(data => {
-      const allowed =
-        data.dimensions === "all" ||
-        data.dimensions.includes(name);
-
-      if (allowed) {
+      if (data.dimensions === "all" || data.dimensions.includes(name)) {
         this.mobs.push(new Mob(data, this.scene));
       }
     });
@@ -30,11 +25,3 @@ class MobSystem {
 }
 
 window.MobSystem = MobSystem;
-spawnMob(name, pos) {
-  const data = MOB_DATA.find(m => m.name === name);
-  if (!data) return;
-
-  const mob = new Mob(data, this.scene);
-  mob.mesh.position.copy(pos);
-  this.mobs.push(mob);
-}
