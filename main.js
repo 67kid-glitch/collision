@@ -1,9 +1,18 @@
-console.log("main.js loaded");
+const renderer = new Renderer();
+const world = new World(renderer.scene);
+const player = new Player(renderer.camera);
 
 const overlay = document.getElementById("click");
 
 overlay.addEventListener("click", () => {
-  console.log("clicked");
   overlay.style.display = "none";
-  document.body.style.background = "green";
+  renderer.renderer.domElement.requestPointerLock();
 });
+
+function loop() {
+  requestAnimationFrame(loop);
+  player.update();
+  renderer.render();
+}
+
+loop();
