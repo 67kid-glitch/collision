@@ -2,12 +2,9 @@ class Player {
   constructor(camera) {
     this.camera = camera;
 
-    // Player root (yaw)
     this.body = new THREE.Object3D();
-    this.body.position.set(0, 2, 5);
+    this.body.position.set(0, 5, 5);
     this.body.add(camera);
-
-    // Camera pitch only
     camera.position.set(0, 0, 0);
 
     this.yaw = 0;
@@ -16,10 +13,25 @@ class Player {
     this.speed = 0.15;
     this.sensitivity = 0.002;
 
+    // === PHYSICS ===
+    this.velocityY = 0;
+    this.gravity = -0.02;
+    this.jumpStrength = 0.35;
+    this.onGround = false;
+
     this.keys = {};
 
-    window.addEventListener("keydown", e => this.keys[e.key.toLowerCase()] = true);
-    window.addEventListener("keyup", e => this.keys[e.key.toLowerCase()] = false);
+    window.addEventListener("keydown", e => {
+      this.keys[e.key.toLowerCase()] = true;
+      if (e.key === " " && this.onGround) {
+        this.velocityY = this.jumpStrength;
+        this.onGround = false;
+      }
+    });
+
+    window.addEventListener("keyup", e => {
+      this.keys[e.key.toLowerCase()] = false;
+    });
 
     document.addEventListener("mousemove", e => {
       if (!document.pointerLockElement) return;
@@ -40,22 +52,30 @@ class Player {
   }
 
   update() {
+    // === MOVEMENT ===
     const forward = new THREE.Vector3(
-      Math.sin(this.yaw),
-      0,
-      Math.cos(this.yaw)
+      Math.sin(this.yaw), 0, Math.cos(this.yaw)
     ).negate();
 
     const right = new THREE.Vector3(
-      Math.cos(this.yaw),
-      0,
-      -Math.sin(this.yaw)
+      Math.cos(this.yaw), 0, -Math.sin(this.yaw)
     );
 
     if (this.keys["w"]) this.body.position.addScaledVector(forward, this.speed);
     if (this.keys["s"]) this.body.position.addScaledVector(forward, -this.speed);
     if (this.keys["a"]) this.body.position.addScaledVector(right, -this.speed);
     if (this.keys["d"]) this.body.position.addScaledVector(right, this.speed);
+
+    // === GRAVITY ===
+    this.velocityY += this.gravity;
+    this.body.position.y += this.velocityY;
+
+    // === GROUND CHECK (simple but solid) ===
+    if (this.body.position.y < 2) {
+      this.body.position.y = 2;
+      this.velocityY = 0;
+      this.onGround = true;
+    }
   }
 }
 
