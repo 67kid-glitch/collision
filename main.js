@@ -1,27 +1,29 @@
+import { Game } from "./core/Game.js";
+import { World } from "./world/World.js";
+import { Player } from "./player/Player.js";
+import { Renderer } from "./engine/Renderer.js";
+import { MobSystem } from "./mobs/MobSystem.js";
+import { StructureSystem } from "./world/StructureSystem.js";
+
+const renderer = new Renderer();
+const world = new World(renderer.scene);
+const player = new Player(renderer.camera);
+const mobs = new MobSystem(renderer.scene);
 const structures = new StructureSystem(renderer.scene);
 
-// Spawn structures
 structures.spawn("trialChamber", 10, 10);
 structures.spawn("woodlandMansion", -20, 10);
-structures.spawn("fortress", 15, -20);
-structures.spawn("bastion", -15, -20);
+structures.spawn("fortress", 20, -20);
+structures.spawn("bastion", -20, -20);
 
-// Mob spawner
-const spawner = new Spawner(renderer.scene, "Zombie", 5, 5);
+mobs.setDimension("overworld");
 
-// Redstone
-const redstone = new Redstone();
-const lamp = new RedstoneLamp(renderer.scene, redstone, 0, 5);
+function gameLoop() {
+  requestAnimationFrame(gameLoop);
 
-window.addEventListener("keydown", e => {
-  if (e.key === "r") redstone.toggle();
-});
-
-function loop() {
-  requestAnimationFrame(loop);
   player.update();
   mobs.update(player, renderer.camera);
-  spawner.update(mobs);
-  lamp.update();
   renderer.render();
 }
+
+gameLoop();
