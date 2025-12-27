@@ -9,9 +9,10 @@ class Renderer {
       0.1,
       1000
     );
+
     this.camera.position.set(0, 2, 5);
 
-    this.renderer = new THREE.WebGLRenderer({ antialias: true });
+    this.renderer = new THREE.WebGLRenderer();
     this.renderer.setSize(window.innerWidth, window.innerHeight);
     document.body.appendChild(this.renderer.domElement);
 
@@ -19,7 +20,14 @@ class Renderer {
     light.position.set(10, 20, 10);
     this.scene.add(light);
 
-    this.scene.add(new THREE.AmbientLight(0xffffff, 0.4));
+    const ambient = new THREE.AmbientLight(0xaaaaaa);
+    this.scene.add(ambient);
+
+    window.addEventListener("resize", () => {
+      this.camera.aspect = window.innerWidth / window.innerHeight;
+      this.camera.updateProjectionMatrix();
+      this.renderer.setSize(window.innerWidth, window.innerHeight);
+    });
   }
 
   render() {
