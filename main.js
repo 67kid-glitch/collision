@@ -1,4 +1,4 @@
-alert("main.js running");
+alert("main.js running 67 67 67 67 67 67 67 67 67 67 67 67 67 67 67 67 67 67 67 67 67 67 67 67 67 67 67 67 67 67 67 67 67 67 67 67 67 67 67 67 67 67 67 67 67 67 67 67 67");
 console.log("Renderer:", window.Renderer);
 console.log("Player:", window.Player);
 // click to play
