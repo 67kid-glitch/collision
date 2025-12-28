@@ -1,3 +1,4 @@
+alert("main.js running");
 // click to play
 const startScreen = document.getElementById("startScreen");
 startScreen.onclick = () => {
